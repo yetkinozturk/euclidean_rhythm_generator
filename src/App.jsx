@@ -52,7 +52,7 @@ function CircleSequencer({ pattern, currentStep, rotation, color, size = 200, pu
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <circle cx={cx} cy={cy} r={r + 2} fill="none" stroke={color.ring} strokeWidth="4" opacity="0.4" />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.60)" strokeWidth="1" />
 
       {activePoints.length > 2 && (
         <polygon
@@ -84,8 +84,8 @@ function CircleSequencer({ pattern, currentStep, rotation, color, size = 200, pu
             <circle
               cx={p.x} cy={p.y}
               r={isCurrent ? dotR + 2 : dotR}
-              fill={p.active ? (isCurrent ? "#fff" : color.h) : "rgba(255,255,255,0.08)"}
-              stroke={p.active ? color.a : "rgba(255,255,255,0.12)"}
+              fill={p.active ? (isCurrent ? "#fff" : color.h) : "rgba(255,255,255,0.30)"}
+              stroke={p.active ? color.a : "rgba(255,255,255,0.60)"}
               strokeWidth={p.active ? 1.5 : 0.5}
               style={{ transition: "all 0.08s ease" }}
             />
@@ -97,7 +97,7 @@ function CircleSequencer({ pattern, currentStep, rotation, color, size = 200, pu
         style={{ fontSize: "16px", fontWeight: 700, fontFamily: "inherit" }}>
         {pulses},{steps}
       </text>
-      <text x={cx} y={cy + 14} textAnchor="middle" fill="rgba(255,255,255,0.35)"
+      <text x={cx} y={cy + 14} textAnchor="middle" fill="rgba(255,255,255,0.55)"
         style={{ fontSize: "10px", fontFamily: "inherit" }}>
         rot {rotation}
       </text>
@@ -134,7 +134,7 @@ function KnobControl({ value, min, max, onChange, label, color, size = 56 }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, userSelect: "none" }}>
       <svg width={size} height={size} style={{ cursor: "ns-resize", touchAction: "none" }} onPointerDown={handlePointerDown}>
-        <circle cx={cx} cy={cy} r={r} fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
+        <circle cx={cx} cy={cy} r={r} fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.30)" strokeWidth="2" />
         <line
           x1={cx} y1={cy}
           x2={cx + (r - 4) * Math.cos((angle - 90) * Math.PI / 180)}
@@ -143,7 +143,7 @@ function KnobControl({ value, min, max, onChange, label, color, size = 56 }) {
         />
         <circle cx={cx} cy={cy} r={3} fill={color} opacity="0.6" />
       </svg>
-      <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+      <span style={{ fontSize: "10px", color: "rgba(255,255,255,0.60)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
         {label}
       </span>
       <span style={{ fontSize: "13px", color: "#fff", fontWeight: 600 }}>{value}</span>
@@ -166,9 +166,9 @@ function TrackRow({ track, index, color, currentStep, onUpdate, onRemove, midiOu
     <div style={{
       display: "flex", alignItems: "center", gap: 16,
       padding: "16px 20px",
-      background: track.muted ? "rgba(255,255,255,0.01)" : color.bg,
+      background: track.muted ? "rgba(255,255,255,0.10)" : color.bg,
       borderRadius: 12,
-      border: `1px solid ${track.muted ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.04)"}`,
+      border: `1px solid ${track.muted ? "rgba(255,255,255,0.60)" : "rgba(255,255,255,0.10)"}`,
       opacity: track.muted ? 0.45 : 1,
       transition: "all 0.2s",
       flexWrap: "wrap",
@@ -185,9 +185,9 @@ function TrackRow({ track, index, color, currentStep, onUpdate, onRemove, midiOu
           onClick={() => setPresetOpen(!presetOpen)}
           style={{
             padding: "3px 10px", borderRadius: 5, fontSize: 9,
-            background: presetOpen ? `${color.ring}` : "rgba(255,255,255,0.03)",
-            border: presetOpen ? `1px solid ${color.a}55` : "1px solid rgba(255,255,255,0.06)",
-            color: presetOpen ? color.h : "rgba(255,255,255,0.35)",
+            background: presetOpen ? `${color.ring}` : "rgba(0,0,0,0.25)",
+            border: presetOpen ? `1px solid ${color.a}88` : `1px solid ${color.a}44`,
+            color: color.h,
             cursor: "pointer", fontFamily: "inherit", fontWeight: 600,
             letterSpacing: "0.06em", textTransform: "uppercase",
             transition: "all 0.15s",
@@ -249,19 +249,21 @@ function TrackRow({ track, index, color, currentStep, onUpdate, onRemove, midiOu
         <button onClick={() => onUpdate({ ...track, muted: !track.muted })}
           style={{
             width: 36, height: 36, borderRadius: 8,
-            background: track.muted ? "rgba(255,60,60,0.2)" : "rgba(255,255,255,0.06)",
-            border: track.muted ? "1px solid rgba(255,60,60,0.4)" : "1px solid rgba(255,255,255,0.08)",
-            color: track.muted ? "#ff6b6b" : "rgba(255,255,255,0.5)",
+            background: track.muted ? "rgba(255,107,107,0.15)" : "rgba(0,0,0,0.25)",
+            border: track.muted ? "1px solid rgba(255,107,107,0.5)" : `1px solid ${color.a}44`,
+            color: track.muted ? "#ff6b6b" : color.h,
             cursor: "pointer", fontSize: 14, fontWeight: 700,
             display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.15s",
           }}
           title={track.muted ? "Unmute" : "Mute"}>M</button>
         <button onClick={onRemove}
           style={{
             width: 36, height: 36, borderRadius: 8,
-            background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
-            color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: 16,
+            background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,107,107,0.25)",
+            color: "rgba(255,107,107,0.6)", cursor: "pointer", fontSize: 16,
             display: "flex", alignItems: "center", justifyContent: "center",
+            transition: "all 0.15s",
           }}
           title="Remove track">×</button>
       </div>
@@ -279,7 +281,7 @@ function TrackRow({ track, index, color, currentStep, onUpdate, onRemove, midiOu
 }
 
 const selectStyle = {
-  background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)",
+  background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.18)",
   color: "#fff", borderRadius: 6, padding: "4px 8px", fontSize: 12,
   fontFamily: "inherit", outline: "none",
 };
@@ -318,7 +320,7 @@ function TrackPresetPicker({ isOpen, onToggle, onApplyPreset, color, triggerRef 
           Choose Pattern
         </span>
         <button onClick={onToggle} style={{
-          background: "none", border: "none", color: "rgba(255,255,255,0.3)",
+          background: "none", border: "none", color: "rgba(255,255,255,0.50)",
           cursor: "pointer", fontSize: 14, padding: 2, fontFamily: "inherit",
         }}>✕</button>
       </div>
@@ -329,17 +331,17 @@ function TrackPresetPicker({ isOpen, onToggle, onApplyPreset, color, triggerRef 
             onClick={() => setExpandedGroup(expandedGroup === gi ? -1 : gi)}
             style={{
               width: "100%", textAlign: "left", padding: "7px 10px",
-              background: expandedGroup === gi ? "rgba(255,255,255,0.04)" : "transparent",
-              border: "1px solid rgba(255,255,255,0.03)", borderRadius: 6,
+              background: expandedGroup === gi ? "rgba(255,255,255,0.10)" : "transparent",
+              border: "1px solid rgba(255,255,255,0.60)", borderRadius: 6,
               color: "#fff", cursor: "pointer", fontFamily: "inherit",
             }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ fontSize: 11, fontWeight: 600 }}>{group.name}</span>
-              <span style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}>
+              <span style={{ fontSize: 9, color: "rgba(255,255,255,0.60)" }}>
                 {expandedGroup === gi ? "▾" : "▸"} {group.presets.length}
               </span>
             </div>
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.25)", marginTop: 1 }}>
+            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.60)", marginTop: 1 }}>
               {group.description}
             </div>
           </button>
@@ -356,31 +358,31 @@ function TrackPresetPicker({ isOpen, onToggle, onApplyPreset, color, triggerRef 
                     style={{
                       display: "flex", alignItems: "center", gap: 8,
                       padding: "6px 10px", borderRadius: 5,
-                      background: "rgba(255,255,255,0.01)",
-                      border: "1px solid rgba(255,255,255,0.02)",
+                      background: "rgba(255,255,255,0.10)",
+                      border: "1px solid rgba(255,255,255,0.05)",
                       color: "#fff", cursor: "pointer", fontFamily: "inherit",
                       textAlign: "left", transition: "all 0.12s",
                       width: "100%",
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = `${color.ring}`; e.currentTarget.style.borderColor = `${color.a}44`; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.01)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.02)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.10)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)"; }}
                   >
                     <div style={{ display: "flex", gap: 1.5, flexShrink: 0 }}>
                       {rotated.map((v, j) => (
                         <div key={j} style={{
                           width: 4, height: 12, borderRadius: 1,
-                          background: v ? color.h : "rgba(255,255,255,0.06)",
+                          background: v ? color.h : "rgba(255,255,255,0.60)",
                         }} />
                       ))}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 10, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                         {preset.name}
-                        <span style={{ fontWeight: 400, color: "rgba(255,255,255,0.3)", marginLeft: 5 }}>
+                        <span style={{ fontWeight: 400, color: "rgba(255,255,255,0.50)", marginLeft: 5 }}>
                           E({preset.pulses},{preset.steps})
                         </span>
                       </div>
-                      <div style={{ fontSize: 8, color: "rgba(255,255,255,0.2)", marginTop: 1 }}>
+                      <div style={{ fontSize: 8, color: "rgba(255,255,255,0.40)", marginTop: 1 }}>
                         {preset.origin}
                       </div>
                     </div>
@@ -391,7 +393,7 @@ function TrackPresetPicker({ isOpen, onToggle, onApplyPreset, color, triggerRef 
                 display: "flex", alignItems: "center", justifyContent: "center",
                 padding: "3px 0", gap: 4,
               }}>
-                <span style={{ fontSize: 8, color: "rgba(255,255,255,0.12)", letterSpacing: "0.1em" }}>
+                <span style={{ fontSize: 8, color: "rgba(255,255,255,0.60)", letterSpacing: "0.1em" }}>
                   SPARSE → DENSE
                 </span>
               </div>
@@ -668,22 +670,22 @@ export default function App() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(160deg, #0a0a0f 0%, #0f0f1a 40%, #0a0f12 100%)",
+      background: "linear-gradient(160deg, rgb(10, 10, 15) 0%, rgb(92, 92, 158) 40%, rgb(10, 15, 18) 100%)",
       color: "#fff",
       fontFamily: "'JetBrains Mono', 'SF Mono', 'Fira Code', monospace",
       padding: "24px",
     }}>
       {/* Grid bg */}
       <div style={{
-        position: "fixed", inset: 0, opacity: 0.03, pointerEvents: "none",
-        backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+        position: "fixed", inset: 0, opacity: 0.04, pointerEvents: "none",
+        backgroundImage: "linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px)",
         backgroundSize: "40px 40px",
       }} />
 
       <style>{`
         .ctrl-label {
           font-size: 10px;
-          color: rgba(255,255,255,0.35);
+          color: rgba(255,255,255,0.55);
           text-transform: uppercase;
           letter-spacing: 0.05em;
           font-family: inherit;
@@ -701,7 +703,7 @@ export default function App() {
         {/* Header */}
         <div style={{ marginBottom: 32, display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
           <div>
-            <p style={{ margin: 0, fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+            <p style={{ margin: 0, fontSize: 11, color: "rgba(255,255,255,0.50)", letterSpacing: "0.15em", textTransform: "uppercase" }}>
               Euclidean Rhythm Generator
             </p>
           </div>
@@ -710,23 +712,23 @@ export default function App() {
             <div style={{
               display: "flex", alignItems: "center", gap: 8,
               padding: "6px 12px", borderRadius: 8,
-              background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)",
+              background: "rgba(255,255,255,0.60)", border: "1px solid rgba(255,255,255,0.60)",
             }}>
               <div style={{
                 width: 6, height: 6, borderRadius: "50%",
-                background: midiOutputs.length > 0 ? "#47ffe8" : "rgba(255,255,255,0.2)",
+                background: midiOutputs.length > 0 ? "#47ffe8" : "rgba(255,255,255,0.40)",
                 boxShadow: midiOutputs.length > 0 ? "0 0 8px rgba(71,255,232,0.5)" : "none",
               }} />
-              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.60)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
                 MIDI: {midiStatus}
               </span>
             </div>
 
             <button onClick={() => setPage("about")} style={{
               padding: "6px 14px", borderRadius: 8, fontSize: 10,
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              color: "rgba(255,255,255,0.4)", cursor: "pointer",
+              background: "rgba(255,255,255,0.10)",
+              border: "1px solid rgba(255,255,255,0.30)",
+              color: "rgba(255,255,255,0.60)", cursor: "pointer",
               fontFamily: "inherit", fontWeight: 600,
               letterSpacing: "0.06em", textTransform: "uppercase",
               transition: "all 0.15s",
@@ -739,7 +741,7 @@ export default function App() {
         <div style={{
           display: "flex", alignItems: "center", gap: 16, marginBottom: 24,
           padding: "16px 20px", borderRadius: 12,
-          background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
+          background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)",
           flexWrap: "wrap",
         }}>
           <button onClick={startStop} style={{
@@ -765,7 +767,7 @@ export default function App() {
           <KnobControl value={bpm} min={40} max={240} onChange={setBpm} label="BPM" color="#e8ff47" size={52} />
           <KnobControl value={swing} min={0} max={100} onChange={setSwing} label="Swing" color="#47ffe8" size={52} />
 
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", marginLeft: "auto", letterSpacing: "0.05em" }}>
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.40)", marginLeft: "auto", letterSpacing: "0.05em" }}>
             SPACE to play/stop
           </div>
         </div>
@@ -787,21 +789,21 @@ export default function App() {
         {tracks.length < 6 && (
           <button onClick={addTrack} style={{
             width: "100%", marginTop: 8, padding: "14px", borderRadius: 12,
-            border: "1px dashed rgba(255,255,255,0.08)", background: "transparent",
-            color: "rgba(255,255,255,0.25)", cursor: "pointer", fontSize: 13,
+            border: "1px dashed rgba(255,255,255,0.30)", background: "transparent",
+            color: "rgba(255,255,255,0.60)", cursor: "pointer", fontSize: 13,
             fontFamily: "inherit", transition: "all 0.2s",
           }}
-          onMouseEnter={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.2)"; e.target.style.color = "rgba(255,255,255,0.5)"; }}
-          onMouseLeave={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; e.target.style.color = "rgba(255,255,255,0.25)"; }}
+          onMouseEnter={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.40)"; e.target.style.color = "rgba(255,255,255,0.65)"; }}
+          onMouseLeave={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.30)"; e.target.style.color = "rgba(255,255,255,0.60)"; }}
           >+ Add Track</button>
         )}
 
         {/* Pattern readout */}
         <div style={{
           marginTop: 20, padding: "12px 16px", borderRadius: 10,
-          background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
+          background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)",
         }}>
-          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+          <span style={{ fontSize: 10, color: "rgba(255,255,255,0.50)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
             Pattern Readout
           </span>
           <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
@@ -821,8 +823,8 @@ export default function App() {
                           display: "inline-block", width: 14, height: 14,
                           lineHeight: "14px", textAlign: "center", fontSize: 9,
                           borderRadius: 3,
-                          background: isActive ? "#fff" : (v ? color.h : "rgba(255,255,255,0.04)"),
-                          color: isActive ? "#0a0a0f" : (v ? "#0a0a0f" : "rgba(255,255,255,0.15)"),
+                          background: isActive ? "#fff" : (v ? color.h : "rgba(255,255,255,0.10)"),
+                          color: isActive ? "#0a0a0f" : (v ? "#0a0a0f" : "rgba(255,255,255,0.30)"),
                           fontWeight: v ? 700 : 400,
                           boxShadow: isActive ? `0 0 6px ${color.h}` : "none",
                           transition: "all 0.05s ease",
@@ -832,7 +834,7 @@ export default function App() {
                       );
                     })}
                   </div>
-                  <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)", marginLeft: 8 }}>
+                  <span style={{ fontSize: 10, color: "rgba(255,255,255,0.40)", marginLeft: 8 }}>
                     [{rotated.join("")}]
                   </span>
                 </div>
@@ -843,7 +845,7 @@ export default function App() {
 
         <p style={{
           marginTop: 24, textAlign: "center", fontSize: 10,
-          color: "rgba(255,255,255,0.15)", letterSpacing: "0.08em",
+          color: "rgba(255,255,255,0.30)", letterSpacing: "0.08em",
         }}>
           This tool is dedicated to the people who experiment and show us new ways on our journey.
         </p>
@@ -852,10 +854,10 @@ export default function App() {
           gap: 12, alignItems: "center",
         }}>
           <a href="https://github.com/yetkinozturk/euclidean_rhythm_generator" target="_blank" rel="noopener noreferrer"
-            style={{ fontSize: 9, color: "rgba(255,255,255,0.2)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>GitHub</a>
+            style={{ fontSize: 9, color: "rgba(255,255,255,0.40)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.30)" }}>GitHub</a>
           <a href="mailto:abgtjjmka@mozmail.com"
-            style={{ fontSize: 9, color: "rgba(255,255,255,0.2)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>Contact</a>
-          <span style={{ fontSize: 9, color: "rgba(255,255,255,0.12)" }}>v1.0</span>
+            style={{ fontSize: 9, color: "rgba(255,255,255,0.40)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.30)" }}>Contact</a>
+          <span style={{ fontSize: 9, color: "rgba(255,255,255,0.60)" }}>v1.0</span>
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ bun run build
 # Push dist to gh-pages branch
 cd dist
 git init
-git checkout -b gh-pages
+git checkout -B gh-pages
 git add -A
 git commit -m "deploy"
 git push -f git@github.com:yetkinozturk/euclidean_rhythm_generator.git gh-pages

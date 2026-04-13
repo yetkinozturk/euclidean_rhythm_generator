@@ -71,7 +71,7 @@ function PatternViz({ pulses, steps, size = 80 }) {
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.60)" strokeWidth="1" />
       {activePoints.length > 2 && (
         <polygon
           points={activePoints.map(p => `${p.x},${p.y}`).join(" ")}
@@ -85,7 +85,7 @@ function PatternViz({ pulses, steps, size = 80 }) {
       )}
       {points.map((p, i) => (
         <circle key={i} cx={p.x} cy={p.y} r={p.active ? 3.5 : 2}
-          fill={p.active ? "#e8ff47" : "rgba(255,255,255,0.1)"}
+          fill={p.active ? "#e8ff47" : "rgba(255,255,255,0.18)"}
           stroke={p.active ? "#bfd43a" : "none"} strokeWidth="0.5" />
       ))}
     </svg>
@@ -96,15 +96,15 @@ export default function About({ onBack }) {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(160deg, #0a0a0f 0%, #0f0f1a 40%, #0a0f12 100%)",
+      background: "linear-gradient(160deg, rgb(10, 10, 15) 0%, rgb(92, 92, 158) 40%, rgb(10, 15, 18) 100%)",
       color: "#fff",
       fontFamily: "'JetBrains Mono', 'SF Mono', 'Fira Code', monospace",
       padding: "24px",
     }}>
       {/* Grid bg */}
       <div style={{
-        position: "fixed", inset: 0, opacity: 0.03, pointerEvents: "none",
-        backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+        position: "fixed", inset: 0, opacity: 0.04, pointerEvents: "none",
+        backgroundImage: "linear-gradient(rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px)",
         backgroundSize: "40px 40px",
       }} />
 
@@ -114,8 +114,8 @@ export default function About({ onBack }) {
         <div style={{ marginBottom: 40, display: "flex", alignItems: "flex-start", justifyContent: "flex-end" }}>
           <button onClick={onBack} style={{
             padding: "6px 16px", borderRadius: 8, fontSize: 11,
-            background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-            color: "rgba(255,255,255,0.5)", cursor: "pointer",
+            background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.30)",
+            color: "rgba(255,255,255,0.65)", cursor: "pointer",
             fontFamily: "inherit", fontWeight: 600,
             letterSpacing: "0.06em", textTransform: "uppercase",
           }}>← Back</button>
@@ -123,13 +123,13 @@ export default function About({ onBack }) {
 
         {/* Intro */}
         <section style={{ marginBottom: 48 }}>
-          <p style={{ fontSize: 14, lineHeight: 1.8, color: "rgba(255,255,255,0.7)", marginBottom: 16 }}>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: "rgba(255,255,255,0.80)", marginBottom: 16 }}>
             The Euclidean rhythm algorithm distributes a given number of pulses
             as evenly as possible across a given number of time steps. The result
             is a maximally even pattern — one where the gaps between hits are as
             uniform as they can be.
           </p>
-          <p style={{ fontSize: 14, lineHeight: 1.8, color: "rgba(255,255,255,0.7)" }}>
+          <p style={{ fontSize: 14, lineHeight: 1.8, color: "rgba(255,255,255,0.80)" }}>
             What makes this remarkable is that these mathematically optimal
             patterns match the rhythms that musicians across the world arrived at
             independently over centuries. Cuban clave, West African bell patterns,
@@ -142,7 +142,7 @@ export default function About({ onBack }) {
         {/* Timeline */}
         <section style={{ marginBottom: 48 }}>
           <h2 style={{
-            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)",
+            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.60)",
             letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 24,
           }}>
             Timeline
@@ -177,7 +177,7 @@ export default function About({ onBack }) {
                   {item.title}
                 </div>
                 <p style={{
-                  fontSize: 13, lineHeight: 1.75, color: "rgba(255,255,255,0.55)",
+                  fontSize: 13, lineHeight: 1.75, color: "rgba(255,255,255,0.70)",
                   margin: "0 0 8px 0",
                 }}>
                   {item.text}
@@ -193,7 +193,7 @@ export default function About({ onBack }) {
         {/* The Algorithm */}
         <section style={{ marginBottom: 48 }}>
           <h2 style={{
-            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)",
+            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.60)",
             letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 20,
           }}>
             How It Works
@@ -201,21 +201,21 @@ export default function About({ onBack }) {
 
           <div style={{
             padding: "20px 24px", borderRadius: 10,
-            background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
+            background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)",
             marginBottom: 16,
           }}>
-            <p style={{ fontSize: 13, lineHeight: 1.75, color: "rgba(255,255,255,0.6)", margin: 0 }}>
+            <p style={{ fontSize: 13, lineHeight: 1.75, color: "rgba(255,255,255,0.75)", margin: 0 }}>
               Given <span style={{ color: "#e8ff47", fontWeight: 600 }}>k</span> pulses
               and <span style={{ color: "#47ffe8", fontWeight: 600 }}>n</span> steps,
               Bjorklund's algorithm works like dealing cards:
             </p>
             <ol style={{
-              fontSize: 13, lineHeight: 2, color: "rgba(255,255,255,0.55)",
+              fontSize: 13, lineHeight: 2, color: "rgba(255,255,255,0.70)",
               margin: "12px 0 0 0", paddingLeft: 20,
             }}>
               <li>Start with <span style={{ color: "#e8ff47" }}>k</span> groups
                   of [<span style={{ color: "#e8ff47" }}>1</span>] and (<span style={{ color: "#47ffe8" }}>n</span>-<span style={{ color: "#e8ff47" }}>k</span>)
-                  groups of [<span style={{ color: "rgba(255,255,255,0.3)" }}>0</span>]</li>
+                  groups of [<span style={{ color: "rgba(255,255,255,0.50)" }}>0</span>]</li>
               <li>Distribute the shorter pile onto the longer pile, one per group</li>
               <li>The leftovers become the new shorter pile</li>
               <li>Repeat until only 0 or 1 remainder groups are left</li>
@@ -226,10 +226,10 @@ export default function About({ onBack }) {
           <div style={{
             padding: "16px 20px", borderRadius: 10,
             background: "rgba(232,255,71,0.03)", border: "1px solid rgba(232,255,71,0.08)",
-            fontFamily: "inherit", fontSize: 12, color: "rgba(255,255,255,0.5)",
+            fontFamily: "inherit", fontSize: 12, color: "rgba(255,255,255,0.65)",
             lineHeight: 1.8,
           }}>
-            <div style={{ color: "rgba(255,255,255,0.3)", marginBottom: 8, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            <div style={{ color: "rgba(255,255,255,0.50)", marginBottom: 8, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase" }}>
               Example: E(3, 8) → Tresillo
             </div>
             <div>Start: &nbsp;&nbsp;[1] [1] [1] [0] [0] [0] [0] [0]</div>
@@ -242,7 +242,7 @@ export default function About({ onBack }) {
         {/* World Rhythms Grid */}
         <section style={{ marginBottom: 48 }}>
           <h2 style={{
-            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)",
+            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.60)",
             letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 20,
           }}>
             World Rhythms as Euclidean Patterns
@@ -258,7 +258,7 @@ export default function About({ onBack }) {
                 <div key={i} style={{
                   display: "flex", alignItems: "center", gap: 12,
                   padding: "12px 14px", borderRadius: 8,
-                  background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)",
+                  background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)",
                 }}>
                   <PatternViz pulses={r.pulses} steps={r.steps} size={56} />
                   <div>
@@ -268,14 +268,14 @@ export default function About({ onBack }) {
                     <div style={{ fontSize: 10, color: "#e8ff47", marginTop: 1 }}>
                       E({r.pulses},{r.steps})
                     </div>
-                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.50)", marginTop: 2 }}>
                       {r.origin}
                     </div>
                     <div style={{ display: "flex", gap: 1.5, marginTop: 4 }}>
                       {pat.map((v, j) => (
                         <div key={j} style={{
                           width: 4, height: 10, borderRadius: 1,
-                          background: v ? "#e8ff47" : "rgba(255,255,255,0.06)",
+                          background: v ? "#e8ff47" : "rgba(255,255,255,0.60)",
                         }} />
                       ))}
                     </div>
@@ -289,12 +289,12 @@ export default function About({ onBack }) {
         {/* Why it matters */}
         <section style={{ marginBottom: 48 }}>
           <h2 style={{
-            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)",
+            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.60)",
             letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16,
           }}>
             Why It Matters
           </h2>
-          <p style={{ fontSize: 13, lineHeight: 1.8, color: "rgba(255,255,255,0.55)" }}>
+          <p style={{ fontSize: 13, lineHeight: 1.8, color: "rgba(255,255,255,0.70)" }}>
             The convergence is striking: 2,300-year-old mathematics, a 1960s
             graphics algorithm, a 2003 physics lab timing tool, and centuries of
             musical tradition across every inhabited continent all arrive at the
@@ -308,7 +308,7 @@ export default function About({ onBack }) {
         {/* References */}
         <section style={{ marginBottom: 48 }}>
           <h2 style={{
-            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.4)",
+            fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.60)",
             letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16,
           }}>
             References & Further Reading
@@ -327,16 +327,16 @@ export default function About({ onBack }) {
             ].map((ref, i) => (
               <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer" style={{
                 display: "block", padding: "10px 14px", borderRadius: 6,
-                background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.03)",
+                background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.60)",
                 textDecoration: "none", transition: "all 0.15s",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(71,255,232,0.04)"; e.currentTarget.style.borderColor = "rgba(71,255,232,0.12)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.02)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.03)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.60)"; }}
               >
                 <div style={{ fontSize: 12, color: "#47ffe8", fontWeight: 600 }}>
                   {ref.title} ↗
                 </div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.50)", marginTop: 2 }}>
                   {ref.author}
                 </div>
               </a>
@@ -346,10 +346,10 @@ export default function About({ onBack }) {
 
         {/* Footer */}
         <div style={{
-          padding: "20px 0", borderTop: "1px solid rgba(255,255,255,0.04)",
+          padding: "20px 0", borderTop: "1px solid rgba(255,255,255,0.10)",
           textAlign: "center",
         }}>
-          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.15)", letterSpacing: "0.08em" }}>
+          <p style={{ fontSize: 10, color: "rgba(255,255,255,0.30)", letterSpacing: "0.08em" }}>
             EUCLID — Euclidean Rhythm Generator • Built with React, Tone.js & Web MIDI API
           </p>
         </div>
