@@ -847,6 +847,16 @@ export default function App() {
         }}>
           This tool is dedicated to the people who experiment and show us new ways on our journey.
         </p>
+        <div style={{
+          marginTop: 10, display: "flex", justifyContent: "center",
+          gap: 12, alignItems: "center",
+        }}>
+          <a href="https://github.com/yetkinozturk/euclidean_rhythm_generator" target="_blank" rel="noopener noreferrer"
+            style={{ fontSize: 9, color: "rgba(255,255,255,0.2)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>GitHub</a>
+          <a href="mailto:abgtjjmka@mozmail.com"
+            style={{ fontSize: 9, color: "rgba(255,255,255,0.2)", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>Contact</a>
+          <span style={{ fontSize: 9, color: "rgba(255,255,255,0.12)" }}>v1.0</span>
+        </div>
       </div>
     </div>
   );
