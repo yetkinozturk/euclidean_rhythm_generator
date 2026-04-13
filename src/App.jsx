@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import * as Tone from "tone";
 import { euclidean, rotatePattern } from "./euclidean.js";
 import { PRESET_GROUPS } from "./presets.js";
+import { loadProjects, saveProject, deleteProject, createProject, DEFAULT_TRACKS, DEFAULT_BPM, DEFAULT_SWING } from "./projects.js";
 import About from "./About.jsx";
 
 // ── MIDI helpers ──
@@ -407,19 +408,25 @@ function TrackPresetPicker({ isOpen, onToggle, onApplyPreset, color, triggerRef 
 
 // ── Main App ──
 export default function App() {
-  const [tracks, setTracks] = useState([
-    { pulses: 3, steps: 8, rotation: 0, note: 42, channel: 10, velocity: 80, muted: false, midiOutput: "internal" },
-    { pulses: 2, steps: 5, rotation: 1, note: 44, channel: 10, velocity: 62, muted: false, midiOutput: "internal" },
-  ]);
+  const [tracks, setTracks] = useState(DEFAULT_TRACKS);
 
-  const [bpm, setBpm] = useState(120);
-  const [swing, setSwing] = useState(16);
+  const [bpm, setBpm] = useState(DEFAULT_BPM);
+  const [swing, setSwing] = useState(DEFAULT_SWING);
   const [playing, setPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
   const [midiAccess, setMidiAccess] = useState(null);
   const [midiOutputs, setMidiOutputs] = useState([]);
   const [midiStatus, setMidiStatus] = useState("Not connected");
   const [page, setPage] = useState("sequencer"); // "sequencer" | "about"
+
+  // ── Project state ──
+  const [projectsOpen, setProjectsOpen] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [currentProjectId, setCurrentProjectId] = useState(null);
+  const [projectName, setProjectName] = useState("");
+
+  // Load projects on mount
+  useEffect(() => { setProjects(loadProjects()); }, []);
 
   // ── All mutable engine state lives in refs, never in React state ──
   // This prevents any React re-render from interfering with the audio loop.
@@ -663,6 +670,53 @@ export default function App() {
     setTracks(tracks.filter((_, idx) => idx !== i));
   };
 
+  // ── Project actions ──
+  const handleSaveProject = () => {
+    const name = projectName.trim() || "Untitled";
+    let project;
+    if (currentProjectId) {
+      // Update existing
+      const existing = projects.find(p => p.id === currentProjectId);
+      if (existing) {
+        project = { ...existing, name, bpm, swing, tracks: tracks.map(t => ({ ...t, midiOutput: "internal" })), updatedAt: new Date().toISOString() };
+      }
+    }
+    if (!project) {
+      project = createProject(name, bpm, swing, tracks);
+    }
+    const updated = saveProject(project);
+    setProjects(updated);
+    setCurrentProjectId(project.id);
+    setProjectName(project.name);
+  };
+
+  const handleLoadProject = (project) => {
+    setTracks(project.tracks.map(t => ({ ...t, midiOutput: "internal" })));
+    setBpm(project.bpm);
+    setSwing(project.swing);
+    setCurrentProjectId(project.id);
+    setProjectName(project.name);
+    setProjectsOpen(false);
+  };
+
+  const handleDeleteProject = (id) => {
+    const updated = deleteProject(id);
+    setProjects(updated);
+    if (currentProjectId === id) {
+      setCurrentProjectId(null);
+      setProjectName("");
+    }
+  };
+
+  const handleNewProject = () => {
+    setTracks([...DEFAULT_TRACKS]);
+    setBpm(DEFAULT_BPM);
+    setSwing(DEFAULT_SWING);
+    setCurrentProjectId(null);
+    setProjectName("");
+    setProjectsOpen(false);
+  };
+
   if (page === "about") {
     return <About onBack={() => setPage("sequencer")} />;
   }
@@ -709,10 +763,20 @@ export default function App() {
           </div>
 
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <button onClick={() => setProjectsOpen(!projectsOpen)} style={{
+              padding: "6px 14px", borderRadius: 8, fontSize: 10,
+              background: projectsOpen ? "rgba(232,255,71,0.10)" : "rgba(255,255,255,0.10)",
+              border: projectsOpen ? "1px solid rgba(232,255,71,0.30)" : "1px solid rgba(255,255,255,0.30)",
+              color: projectsOpen ? "#e8ff47" : "rgba(255,255,255,0.60)", cursor: "pointer",
+              fontFamily: "inherit", fontWeight: 600,
+              letterSpacing: "0.06em", textTransform: "uppercase",
+              transition: "all 0.15s",
+            }}>Projects ({projectName || "empty"})</button>
+
             <div style={{
               display: "flex", alignItems: "center", gap: 8,
               padding: "6px 12px", borderRadius: 8,
-              background: "rgba(255,255,255,0.60)", border: "1px solid rgba(255,255,255,0.60)",
+              background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
             }}>
               <div style={{
                 width: 6, height: 6, borderRadius: "50%",
@@ -736,6 +800,80 @@ export default function App() {
 
           </div>
         </div>
+
+        {/* Projects panel */}
+        {projectsOpen && (
+          <div style={{
+            marginBottom: 16, padding: "16px 20px", borderRadius: 12,
+            background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.12)",
+          }}>
+            {/* Save current */}
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 14 }}>
+              <input
+                type="text"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                placeholder="Project name..."
+                style={{
+                  flex: 1, padding: "7px 12px", borderRadius: 6, fontSize: 12,
+                  background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.18)",
+                  color: "#fff", fontFamily: "inherit", outline: "none",
+                }}
+              />
+              <button onClick={handleSaveProject} style={{
+                padding: "7px 16px", borderRadius: 6, fontSize: 10,
+                background: "rgba(232,255,71,0.12)", border: "1px solid rgba(232,255,71,0.35)",
+                color: "#e8ff47", cursor: "pointer", fontFamily: "inherit", fontWeight: 600,
+                letterSpacing: "0.06em", textTransform: "uppercase",
+              }}>
+                {currentProjectId ? "Update" : "Save"}
+              </button>
+              <button onClick={handleNewProject} style={{
+                padding: "7px 16px", borderRadius: 6, fontSize: 10,
+                background: "rgba(71,255,232,0.08)", border: "1px solid rgba(71,255,232,0.25)",
+                color: "#47ffe8", cursor: "pointer", fontFamily: "inherit", fontWeight: 600,
+                letterSpacing: "0.06em", textTransform: "uppercase",
+              }}>New</button>
+            </div>
+
+            {/* Saved projects list */}
+            {projects.length === 0 ? (
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.40)", textAlign: "center", padding: "8px 0" }}>
+                No saved projects yet
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {projects.map((proj) => (
+                  <div key={proj.id} style={{
+                    display: "flex", alignItems: "center", gap: 10,
+                    padding: "8px 12px", borderRadius: 6,
+                    background: proj.id === currentProjectId ? "rgba(232,255,71,0.06)" : "rgba(255,255,255,0.04)",
+                    border: proj.id === currentProjectId ? "1px solid rgba(232,255,71,0.18)" : "1px solid rgba(255,255,255,0.06)",
+                    transition: "all 0.12s",
+                  }}>
+                    <div style={{ flex: 1, cursor: "pointer" }} onClick={() => handleLoadProject(proj)}>
+                      <div style={{
+                        fontSize: 12, fontWeight: 600,
+                        color: proj.id === currentProjectId ? "#e8ff47" : "#fff",
+                      }}>
+                        {proj.name}
+                      </div>
+                      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.35)", marginTop: 2 }}>
+                        {proj.tracks.length} track{proj.tracks.length !== 1 ? "s" : ""} • {proj.bpm} BPM • swing {proj.swing}
+                      </div>
+                    </div>
+                    <button onClick={() => handleDeleteProject(proj.id)} style={{
+                      padding: "3px 8px", borderRadius: 4, fontSize: 10,
+                      background: "rgba(255,107,107,0.08)", border: "1px solid rgba(255,107,107,0.20)",
+                      color: "rgba(255,107,107,0.6)", cursor: "pointer",
+                      fontFamily: "inherit",
+                    }}>✕</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Transport */}
         <div style={{
